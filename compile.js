@@ -6,6 +6,7 @@ class Compile {
         this.compileELe(el)
         return this
     }
+    // 解析dom
     compileELe (el) {
         let childNodes = el.childNodes
         const self = this
@@ -23,9 +24,9 @@ class Compile {
         })
     }
     compileText (node, attr) {
-        node.textContent = this.vm.data[attr]
+        node.textContent = this.vm.data[attr] // 初始值
         new Watcher(this.vm, attr, (val) => {
-            node.textContent = val
+            node.textContent = val // 更新通知view
         })
     }
 }

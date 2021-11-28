@@ -3,17 +3,16 @@ function Watcher (vm, key, updateCallback) {
     this.vm = vm
     this.key = key
     this.updateCallback = updateCallback
-    this.value = this.get()
+    this.addSelfToDep() // 添加自己到dep中
 }
 Watcher.prototype = {
-    get () {
-        needAddDep = this // 缓存自己，会被添加进dep中
-        let val = this.vm.data[this.key] // 执行get
-        needAddDep = null
-        return val
+    addSelfToDep () {
+        hasWatcher = this
+        let val = this.vm.data[this.key] // 触发get，添加进dep中
+        hasWatcher = null
     },
     update () {
-        this.updateCallback(this.get())
+        this.updateCallback(this.vm.data[this.key])
     }
     
 }    

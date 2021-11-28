@@ -1,5 +1,6 @@
+ var hasWatcher = null
  // 订阅者容器
- function Dep () {
+function Dep () {
     this.subs = []
 }
 Dep.prototype.addSub = function (sub) {
@@ -13,9 +14,9 @@ Dep.prototype.notify = function () {
     })
 }
  
- // 劫持数据，实现观察者
+ // 劫持数据
  function defineReactive (obj, key, val) {
-    let dep = new Dep()
+    let dep = new Dep() // 依赖此劫持变量的 watcher集合
     Object.defineProperty(obj, key, {
         set (newVal) {
             console.log('set')
@@ -23,8 +24,8 @@ Dep.prototype.notify = function () {
             dep.notify()
         },
         get () {
-            if (needAddDep) {
-                dep.addSub(needAddDep)
+            if (hasWatcher) {
+                dep.addSub(hasWatcher)
             }
             return val
         },
@@ -32,6 +33,7 @@ Dep.prototype.notify = function () {
         enumerable: true
     })
 }
+// 观察者
 function observer (data) {
     // 遍历所有属性
     Object.keys(data).forEach(key => {
