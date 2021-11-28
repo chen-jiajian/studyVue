@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue双向绑定实现</title>
+
+</head>
+<body>
+    <div id="app">
+        <div>{{text}}</div>
+        <div v-text="text2"></div>
+        <div>{{name}}</div>
+        <input id="nameInput" type="text"/>
+    </div>
+    <button id="btn">change</button>
+    <button id="btn2">change2</button>
+    <script src="./observer.js"></script>
+    <script src="./watcher.js"></script>
+    <script src="./compile.js"></script>
+    <script>
+        // 实例化vue
+        function SimpleVue ({data, el}) {
+            this.vm = this
+            this.data = data
+            observer(this.data)
+            new Compile(this.vm, el)
+            return this
+        }
+        var spvue = new SimpleVue({
+            el: document.getElementById('app'),
+            data: {
+                text: 'i am reactive text',
+                text2: 'i am reactive text22222',
+                name: 'jarvis'
+            }
+        })
+
+
+
+        function changeHandle () {
+            spvue.data.text = 'change text'
+        }
+        function changeHandle2 () {
+            spvue.data.text2 = 'change text222'
+        }
+        document.getElementById('btn').onclick = changeHandle
+        document.getElementById('btn2').onclick = changeHandle2
+        document.getElementById('nameInput').oninput = function (e) {
+            console.log('oninput', e.srcElement.value)
+            spvue.data.name = e.srcElement.value
+        }
+    </script>
+</body>
+
+</html>
