@@ -9,10 +9,10 @@
 </head>
 <body>
     <div id="app">
-        <div>{{text}}</div>
-        <div v-text="text2"></div>
+        <div v-model="text" data="123" style="">text</div>
+        <div v-text="text2" type="1">text2</div>
         <div>{{name}}</div>
-        <input id="nameInput" type="text"/>
+        <input v-model="name" id="nameInput" type="text"/>
     </div>
     <button id="btn">change</button>
     <button id="btn2">change2</button>
@@ -47,10 +47,10 @@
         }
         document.getElementById('btn').onclick = changeHandle
         document.getElementById('btn2').onclick = changeHandle2
-        document.getElementById('nameInput').oninput = function (e) {
-            console.log('oninput', e.srcElement.value)
-            spvue.data.name = e.srcElement.value
-        }
+        // document.getElementById('nameInput').oninput = function (e) {
+        //     console.log('oninput', e.srcElement.value)
+        //     spvue.data.name = e.srcElement.value
+        // }
     </script>
 </body>
 

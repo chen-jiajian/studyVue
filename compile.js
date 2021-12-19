@@ -2,6 +2,7 @@
 // 模版解析器
 class Compile {
     constructor (vm, el) {
+        this.el = el
         this.vm = vm
         this.compileELe(el)
         return this
@@ -9,17 +10,25 @@ class Compile {
     // 解析dom
     compileELe (el) {
         let childNodes = el.childNodes
-        const self = this
+        console.log('childNodes', childNodes)
         Array.from(childNodes).forEach(node => {
-            const reg = /\{\{(.*)\}\}/
             const text = node.textContent
-            // 存在 {{ }}
-            if (reg.test(text)) {
+            const reg = /\{\{(.*)\}\}/ // 判断{{}}的正则
+            
+            const attrs = node.attributes // 获取属性
+            const attr = this.isDirective(attrs) // 指令属性
+            if (this.isTextNode(node, text) && attr) { // 指令优先
+                if (attr.name === 'v-model') {
+                    
+                } else {
+                    this.compileText(node, attr.value)
+                }
+            } else if (this.isTextNode(node, text) && reg.test(text)) { // 存在 {{ }}
                 this.compileText(node, text.match(reg)[1])
             }
             // 继续遍历子节点
             if (node.childNodes && node.childNodes.length) {
-                self.compileELe(node)
+                this.compileELe(node)
             }
         })
     }
@@ -29,4 +38,38 @@ class Compile {
             node.textContent = val // 更新通知view
         })
     }
+    isTextNode (node, value) {
+        return node.textContent = typeof value == 'undefined' ? '' : value;
+    }
+    // 是否指令
+    isDirective (attrs) {
+        if (!attrs || !attrs.length) return null
+        const arr = Array.from(attrs).filter(attr => {
+            return ['v-model', 'v-text'].includes(attr.name)
+        })
+        return arr[0]
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
