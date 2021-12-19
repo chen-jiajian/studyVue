@@ -13,13 +13,16 @@ class Compile {
         console.log('childNodes', childNodes)
         Array.from(childNodes).forEach(node => {
             const text = node.textContent
-            const reg = /\{\{(.*)\}\}/ // 判断{{}}的正则
+            // 判断{{}}的正则
+            const reg = /\{\{(.*)\}\}/
             
             const attrs = node.attributes // 获取属性
             const attr = this.isDirective(attrs) // 指令属性
-            if (this.isTextNode(node, text) && attr) { // 指令优先
+            console.log('attr', attr)
+            if (attr) { // 指令优先
                 if (attr.name === 'v-model') {
-                    
+                    this.compileText(node, attr.value) 
+                    this.bindEvent(node, attr.value)
                 } else {
                     this.compileText(node, attr.value)
                 }
@@ -36,6 +39,13 @@ class Compile {
         node.textContent = this.vm.data[attr] // 初始值
         new Watcher(this.vm, attr, (val) => {
             node.textContent = val // 更新通知view
+        })
+    }
+    bindEvent (node, attr) {
+        console.log('bindEvent', document.getElementById('nameInput'), node)
+        node.addEventListener('input', (e) => {
+            console.log('input事件', e.target.value)
+            this.vm.data[attr] = e.target.value
         })
     }
     isTextNode (node, value) {
